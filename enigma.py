@@ -12,7 +12,6 @@ from ctypes import ArgumentError
 # Enigma Components
 ETW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-#로터1 로터2 로터3
 WHEELS = {
     "I" : {
         "wire": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
@@ -35,7 +34,6 @@ UKW = {
 }
 
 # Enigma Settings
-# NEXT : 노치에 도달했을 때 다음 바퀴가 회전했는지 여부
 SETTINGS = {
     "UKW": None,
     "WHEELS": [],
@@ -44,7 +42,6 @@ SETTINGS = {
     "PLUGBOARD": []
 }
 
-# 3. setting값들을 확인하고 SETTINGS에 저장
 def apply_settings(ukw, wheel, wheel_pos, plugboard):
     if not ukw in UKW:
         raise ArgumentError(f"UKW {ukw} does not exist!")
@@ -90,22 +87,28 @@ def pass_wheels(input, reverse = False):
     # Keep in mind that reflected signals pass wheels in reverse order
 
     if reverse: 
+        # reflector를 거쳐 reverse
         pass_third = chr(SETTINGS["WHEELS"][2]["wire"].index(input) + ord('A'))
         pass_second = chr(SETTINGS["WHEELS"][1]["wire"].index(pass_third) + ord('A'))
         pass_first = chr(SETTINGS["WHEELS"][0]["wire"].index(pass_second) + ord('A'))
 
+        '''
         print("REVERSE!")
         print("pass_third: " + str(pass_third) + " pass_second: " + str(pass_second) + " pass_first: " +str(pass_first))
+        '''
 
         return pass_first
     else :
+        # plugboard를 거쳐 바퀴 통과
         pass_first = SETTINGS["WHEELS"][0]["wire"][ord(input) - ord('A')]
         pass_second = SETTINGS["WHEELS"][1]["wire"][ord(pass_first) - ord('A')]
         pass_third = SETTINGS["WHEELS"][2]["wire"][ord(pass_second) - ord('A')]
         
+        ...
         print("ENCONDING!")
         print("pass_first: " + str(pass_first) + " pass_second: " + str(pass_second) + " pass_third: " +str(pass_third))
-        
+        ...
+
         return pass_third
 
 # UKW
@@ -113,11 +116,11 @@ def pass_ukw(input):
     return SETTINGS["UKW"][ord(input) - ord('A')]
 
 # rotate_wheel_pos & rotate_wheel_alpha
+# 바퀴회전 - (pos+1)%26, 알파벳 회전
 def rotate_wheel_pos(input):
     SETTINGS["WHEEL_POS"][input] += 1
     SETTINGS["WHEEL_POS"][input] %= 26
     SETTINGS["WHEELS"][input]["wire"] = SETTINGS["WHEELS"][input]["wire"][-1:] + SETTINGS["WHEELS"][input]["wire"][:-1]
-
 
 # Wheel Rotation
 def rotate_wheels():
@@ -141,10 +144,9 @@ def rotate_wheels():
 # Enigma Exec Start
 plaintext = input("Plaintext to Encode: ")
 
-# 2. 각기 setting값들을 받는다.
 # ukw_select : reflector A,B,C설정 B
 # wheel_select : wheel 순서 설정 I III II
-# wheel_pos_select : 
+# wheel_pos_select : wheel 시작 위치 A B C
 # plugboard_setup : AB, CZ, EF ...
 
 ukw_select = input("Set Reflector (A, B, C): ")
