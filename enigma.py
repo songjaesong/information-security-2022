@@ -89,25 +89,27 @@ def pass_wheels(input, reverse = False):
     # Implement Wheel Logics
     # Keep in mind that reflected signals pass wheels in reverse order
 
-    
     if reverse: 
-        pass
+        pass_third = chr(SETTINGS["WHEELS"][2]["wire"].index(input) + ord('A'))
+        pass_second = chr(SETTINGS["WHEELS"][1]["wire"].index(pass_third) + ord('A'))
+        pass_first = chr(SETTINGS["WHEELS"][0]["wire"].index(pass_second) + ord('A'))
+
+        print("REVERSE!")
+        print("pass_third: " + str(pass_third) + " pass_second: " + str(pass_second) + " pass_first: " +str(pass_first))
+
+        return pass_first
     else :
         pass_first = SETTINGS["WHEELS"][0]["wire"][ord(input) - ord('A')]
         pass_second = SETTINGS["WHEELS"][1]["wire"][ord(pass_first) - ord('A')]
         pass_third = SETTINGS["WHEELS"][2]["wire"][ord(pass_second) - ord('A')]
         
-        print("ENCONDING!!!")
+        print("ENCONDING!")
         print("pass_first: " + str(pass_first) + " pass_second: " + str(pass_second) + " pass_third: " +str(pass_third))
         
         return pass_third
 
 # UKW
 def pass_ukw(input):
-    '''
-    print("REFLECTOR!!!")
-    print(str(SETTINGS["UKW"][ord(input) - ord('A')]))
-    '''
     return SETTINGS["UKW"][ord(input) - ord('A')]
 
 # rotate_wheel_pos & rotate_wheel_alpha
@@ -123,16 +125,16 @@ def rotate_wheels():
 
     if SETTINGS["WHEEL_POS"][0] == SETTINGS["WHEELS"][0]["turn"] :
         if SETTINGS["WHEEL_POS"][1] == SETTINGS["WHEELS"][1]["turn"] :
-            # 1바퀴가 노치에 걸려있고 2바퀴도 노치에 걸려서 3바퀴가 돌아갈때
+            # 1바퀴가 노치에 걸려있고 2바퀴도 노치에 걸려서 3바퀴가 돌아갈때 -> 셋다 돌아감
             rotate_wheel_pos(0)
             rotate_wheel_pos(1)
             rotate_wheel_pos(2)
         else :
-            # 1바퀴가 노치에 걸려있고 2바퀴는 노치에 걸리지 않은 경우
+            # 1바퀴가 노치에 걸려있고 2바퀴는 노치에 걸리지 않은 경우 -> 1,2 돌아감
             rotate_wheel_pos(0)
             rotate_wheel_pos(1)
     else :
-        # 1바퀴가 돌아갈때
+        # 1바퀴가 돌아갈때 -> 1 돌아감
         rotate_wheel_pos(0)
     pass
 
@@ -167,5 +169,5 @@ for ch in plaintext:
 
     print(encoded_ch, end='')
     result += encoded_ch
-
+print()
 print("RESULT: " + str(result))
