@@ -17,7 +17,6 @@ def encrypt_secret(secret, pubkey):
     cipher = PKCS1_OAEP.new(key)
     chiphertext = cipher.encrypt(secret)
     return encode_base64(chiphertext)
-
 [secret, pubkey] = read_from_base64()
 cipher_str = encrypt_secret(secret, pubkey)
 
